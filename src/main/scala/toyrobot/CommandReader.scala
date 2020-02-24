@@ -1,21 +1,16 @@
-package toyrobot.commandreader
+package toyrobot
 import scala.io.Source
 
 object CommandReader {
     
     def main(args: Array[String]): Unit = {   
-        getCommands("src/main/scala/resources/commands.txt")
+        println(getCommands("src/main/scala/resources/input.txt"))
     }
 
     def getCommands(path:String): List[String] = {
-        println(path)
-        val lines = Source.fromFile(path).getLines()
+        val lines = Source.fromFile(path).getLines().toList
+        lines
         
-        for(l<-lines) println(l)
-
-        println("done")
-        List("1")
- 
     }
 }
 

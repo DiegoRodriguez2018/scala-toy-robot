@@ -1,8 +1,16 @@
-package toyrobot
+import toyrobot.{CommandReader, ToyRobot}
 
-object ToyRobot {
+object Main {
   def main(args: Array[String]): Unit = {   
     println("Welcome to ToyRobot")
+
+    val commandsPath = "src/main/scala/resources/input.txt"
+    val commands = CommandReader.getCommands(commandsPath)
+
+    val robot = new ToyRobot(commands)
+
+    robot.getCommands().foreach(println)
+
   }
 
   def returnString(): String = {

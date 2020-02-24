@@ -1,12 +1,10 @@
 import org.specs2.mutable.Specification
-import toyrobot.commandreader.{CommandReader}
-
-class CommandReaderTest extends Specification {
+import toyrobot.CommandReader.{getCommands}
+class CommandReaderSpec extends Specification {
     "CommandReader" should {
         "return a commands as type List[String] " in {
-            val path ="../resources/commands.txt"
-            val result = CommandReader.getCommands(path)
-            
+            val path ="src/test/scala/resources/input.txt"
+            val result = getCommands(path)
             result must haveClass[List[String]]
         }
     }
