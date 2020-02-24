@@ -1,7 +1,11 @@
 package toyrobot
 
-object Main {
+object ToyRobot {
   def main(args: Array[String]): Unit = {   
-    println("Hello")
+    println("Welcome to ToyRobot")
+  }
+
+  def returnString(): String = {
+    "random string"
   }
 }
