@@ -8,11 +8,7 @@ object Main {
     val commands = CommandReader.getCommands(commandsPath)
 
     val robot = new ToyRobot(commands)
-
-
-  }
-
-  def returnString(): String = {
-    "random string"
+    robot.execute
+    ()
   }
 }
