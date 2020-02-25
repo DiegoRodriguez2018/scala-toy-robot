@@ -69,24 +69,37 @@ class ToyRobot (commandsList:List[String]) {
                     case South => this.position(1) -=1
                     case West => this.position(0) -=1
                 }
-                "moving"
+                "Moving"
             }
-            case Left =>  "Rotating Left"
-            case Right => "Rotating Right"
+            case Left =>  {
+                this.direction = this.direction match {
+                    case North => West
+                    case West => South
+                    case South => East
+                    case East => North
+                }
+                "Rotating Left"
+            }
+            case Right =>  {
+                this.direction = this.direction match {
+                    case  North =>  East
+                    case  East => South
+                    case  South => West
+                    case  West => North
+                }
+                "Rotating Right"
+            }
             case Report => s"${this.position(0)},${this.position(1)},${directionToString(this.direction)}"
         }
     }
 
-    def execute():String ={
+    def execute():List[String] ={
         val commands = for {
             line <-commandsList
             command = this.getCommandFromLine(line)
         } yield command
 
         val results = commands.map(executeCommand)
-
-        results.foreach(println)
-        results.last
-
+        results
     }
 }

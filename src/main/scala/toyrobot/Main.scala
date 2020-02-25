@@ -2,14 +2,20 @@ import toyrobot.{CommandReader, ToyRobot}
 
 object Main {
   def main(args: Array[String]): Unit = {   
+    println()
     println("Welcome to ToyRobot")
+    println()
 
     val commandsPath = "src/main/scala/resources/input.txt"
     val commands = CommandReader.getCommands(commandsPath)
 
     val robot = new ToyRobot(commands)
-    val finalPosition = robot.execute
+    val results = robot.execute
 
-    println(s"REPORT: Robot final position is ${finalPosition}")
+    results.foreach(println)
+    val finalPosition = results.last
+
+    println()
+    println(s"Robot final position is ${finalPosition}")
   }
 }
