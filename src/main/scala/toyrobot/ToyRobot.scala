@@ -13,10 +13,6 @@ case object Left extends Command
 case object Right extends Command
 case object Report extends Command
 
-
-// TODO: 
-// Limit space to 5x5
-
 class ToyRobot (commandsList:List[String]) {
     private var position: Array[Int] =  Array(0,0) 
     private var direction: Direction =  North 
@@ -61,7 +57,7 @@ class ToyRobot (commandsList:List[String]) {
                 // Checking if position is valid, otherwise ignoring command.
                 val Array(x, y) = position;
 
-                if (x > 0 && x < 6 && y > 0 && y < 6){
+                if (x >= 0 & x <= tableSize & y >= 0 & y <= tableSize){
                     this.position = position;
                     this.direction = direction;
                     s"Placing robot in position ${x},${y} and direction ${this.direction}" 
@@ -70,6 +66,7 @@ class ToyRobot (commandsList:List[String]) {
                 }
             } 
             case Move => {
+                // TODO: add validation
                 this.direction match {
                     case North => this.position(1) +=1
                     case East => this.position(0) +=1
