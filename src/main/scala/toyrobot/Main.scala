@@ -9,7 +9,6 @@ object Main {
 
     val robot = new ToyRobot(commands)
 
-    robot.getCommands().foreach(println)
 
   }
 
