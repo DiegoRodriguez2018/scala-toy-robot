@@ -14,8 +14,8 @@ case object Right extends Command
 case object Report extends Command
 
 class ToyRobot (commandsList:List[String]) {
-    private var position: Array[Int] =  Array(0,0) 
-    private var direction: Direction =  North 
+    private var position: Array[Int] =  Array(0,0)
+    private var direction: Direction =  North
     private val tableSize = 5;
 
     def stringToDirection(str:String):Direction = {
@@ -71,7 +71,6 @@ class ToyRobot (commandsList:List[String]) {
                 }
             } 
             case Move => {
-                // TODO: add validation
                 val Array(x, y) = position;
 
                 val newPosition = this.direction match {

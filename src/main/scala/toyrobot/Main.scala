@@ -2,20 +2,19 @@ import toyrobot.{CommandReader, ToyRobot}
 
 object Main {
   def main(args: Array[String]): Unit = {   
-    println()
-    println("Welcome to ToyRobot")
-    println()
-
     val commandsPath = "src/main/scala/resources/input.txt"
-    val commands = CommandReader.getCommands(commandsPath)
-
-    val robot = new ToyRobot(commands)
-    val results = robot.execute
-
-    results.foreach(println)
-    val finalPosition = results.last
-
-    println()
-    println(s"Robot final position is ${finalPosition}")
+    println("\n Welcome to ToyRobot")
+    println(s"Input file: ${commandsPath} \n")
+    
+    if (CommandReader.validate(commandsPath)){
+      val commands = CommandReader.getCommands(commandsPath)
+      val robot = new ToyRobot(commands)
+      val results = robot.execute
+      val finalPosition = results.last
+      results.foreach(println)
+      println(s"\n Robot final position is ${finalPosition}")
+    } else {
+      println(s"Invalid Input from ${commandsPath}. \n Lines must start with one of the following commands: PLACE, MOVE, LEFT, RIGHT, REPORT")
+    }
   }
 }
