@@ -1,5 +1,5 @@
 import org.specs2.mutable.Specification
-import toyrobot.CommandReader.{getCommands, validate}
+import toyrobot.CommandReader.{getCommands, validate, getCommandsAfterFirstPlaceCommand}
 class CommandReaderSpec extends Specification {
     "CommandReader" should {
         "getCommands" should {
@@ -19,6 +19,14 @@ class CommandReaderSpec extends Specification {
                 val path ="src/test/scala/resources/input_1.txt"
                 val result = validate(path)
                 result must beEqualTo(true)
+            }
+        }
+        "getCommandsAfterFirstPlaceCommand" should {
+            "return a list ignoring commands before PLACE command in input " in {
+                val allCommands: List[String] = List("MOVE","MOVE","REPORT","PLACE 0,4,NORTH","MOVE","MOVE","LEFT","RIGHT","REPORT")
+                val result = getCommandsAfterFirstPlaceCommand(allCommands)
+                val expected = List("PLACE 0,4,NORTH","MOVE","MOVE","LEFT","RIGHT","REPORT")
+                result must beEqualTo(expected)
             }
         }
     }
