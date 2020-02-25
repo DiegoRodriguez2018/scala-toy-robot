@@ -51,13 +51,16 @@ class ToyRobot (commandsList:List[String]) {
         }
     }
 
+    def isValidPosition(position:Array[Int]) = {
+        val Array(x,y) = position
+        x >= 0 & x <= tableSize & y >= 0 & y <= tableSize
+    }
+
     def executeCommand(command:Command): String= {
         command match{
             case Place(position, direction) => {
                 // Checking if position is valid, otherwise ignoring command.
-                val Array(x, y) = position;
-
-                if (x >= 0 & x <= tableSize & y >= 0 & y <= tableSize){
+                if (this.isValidPosition(position)){
                     this.position = position;
                     this.direction = direction;
                     s"Placing robot in position ${x},${y} and direction ${this.direction}" 
@@ -67,13 +70,21 @@ class ToyRobot (commandsList:List[String]) {
             } 
             case Move => {
                 // TODO: add validation
-                this.direction match {
-                    case North => this.position(1) +=1
-                    case East => this.position(0) +=1
-                    case South => this.position(1) -=1
-                    case West => this.position(0) -=1
+                val Array(x, y) = position;
+
+                val newPosition = this.direction match {
+                    case North => Array(x, y + 1)
+                    case East => Array(x + 1, y)
+                    case South => Array(x, y -1)
+                    case West => Array(x -1 , y)
                 }
-                "Moving"
+
+                if (this.isValidPosition(newPosition)) {
+                    this.position = newPosition
+                    "Moving"
+                } else {
+                    s"Invalid Input. Can not MOVE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${this.position(0)},${this.position(1)}"
+                }
             }
             case Left =>  {
                 this.direction = this.direction match {
