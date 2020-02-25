@@ -60,6 +60,8 @@ class ToyRobot (commandsList:List[String]) {
         command match{
             case Place(position, direction) => {
                 // Checking if position is valid, otherwise ignoring command.
+                val Array(x,y) = position
+
                 if (this.isValidPosition(position)){
                     this.position = position;
                     this.direction = direction;
