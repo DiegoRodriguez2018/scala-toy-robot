@@ -16,11 +16,11 @@ case object Report extends Command
 
 // TODO: 
 // Limit space to 5x5
-// Rotation
 
 class ToyRobot (commandsList:List[String]) {
     private var position: Array[Int] =  Array(0,0) 
     private var direction: Direction =  North 
+    private val tableSize = 5;
 
     def stringToDirection(str:String):Direction = {
         str match {
@@ -58,9 +58,16 @@ class ToyRobot (commandsList:List[String]) {
     def executeCommand(command:Command): String= {
         command match{
             case Place(position, direction) => {
-                this.position = position;
-                this.direction = direction;
-                s"Placing robot in position ${this.position(0)},${this.position(1)} and direction ${this.direction}" 
+                // Checking if position is valid, otherwise ignoring command.
+                val Array(x, y) = position;
+
+                if (x > 0 && x < 6 && y > 0 && y < 6){
+                    this.position = position;
+                    this.direction = direction;
+                    s"Placing robot in position ${x},${y} and direction ${this.direction}" 
+                } else {
+                    s"Invalid Input. Can not PLACE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${this.position(0)},${this.position(1)}"
+                }
             } 
             case Move => {
                 this.direction match {
