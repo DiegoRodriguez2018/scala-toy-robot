@@ -8,7 +8,8 @@ object Main {
     val commands = CommandReader.getCommands(commandsPath)
 
     val robot = new ToyRobot(commands)
-    robot.execute
-    ()
+    val finalPosition = robot.execute
+
+    println(s"REPORT: Robot final position is ${finalPosition}")
   }
 }

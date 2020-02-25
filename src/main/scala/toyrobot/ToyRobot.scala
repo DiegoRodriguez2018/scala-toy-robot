@@ -1,7 +1,5 @@
 package toyrobot
 
-
-
 sealed trait Direction
 case object North extends Direction
 case object East extends Direction
@@ -15,21 +13,16 @@ case object Left extends Command
 case object Right extends Command
 case object Report extends Command
 
+
+// TODO: 
+// Limit space to 5x5
+// Rotation
+
 class ToyRobot (commandsList:List[String]) {
-    private var commandIndex: Int = 0
-    
-    def getCommands():List[String] = commandsList
-    def getFirstCommand():String = this.commandsList.head
-    def increaseIndex = { this.commandIndex = this.commandIndex + 1}
+    private var position: Array[Int] =  Array(0,0) 
+    private var direction: Direction =  North 
 
-
-
-    def getInitialDirection(): Direction = {
-        val directionAsString = this.getFirstCommand.replace("PLACE ", "").split(",").last
-        this.getDirection(directionAsString)
-    }
-
-    def getDirection(str:String):Direction = {
+    def stringToDirection(str:String):Direction = {
         str match {
             case "NORTH" => North
             case "EAST" => East
@@ -38,20 +31,23 @@ class ToyRobot (commandsList:List[String]) {
         }
     }
 
-    def getNextCommand():String = commandsList(commandIndex)
-
-    def executeCommand(command: String) ={
-        println(command)
-    }
-
-    def getInitialPosition(): Array[Int] = {
-        val positionAsString = this.getFirstCommand.replace("PLACE ", "").split(",")
-        Array(positionAsString(0).toInt, positionAsString(1).toInt)
+    def directionToString(direction:Direction)={
+        direction match {
+            case  North =>  "NORTH"
+            case  East => "EAST"
+            case  South => "SOUTH"
+            case  West => "WEST"
+        }
     }
 
     def getCommandFromLine(line:String):Command = {
         line.split(" ").head match {
-            case x if x == "PLACE" => Place(Array(0,0), North) // TODO: call a function
+            case x if x == "PLACE" =>{
+                val Array(x, y, directionAsString) = line.replace("PLACE ", "").split(",")
+                val direction = this.stringToDirection(directionAsString)
+                val position = Array(x.toInt, y.toInt)
+                Place(position, direction)
+            } 
             case "MOVE" => Move
             case "LEFT" => Left
             case "RIGHT" => Right
@@ -59,27 +55,38 @@ class ToyRobot (commandsList:List[String]) {
         }
     }
 
-    def executeCommand(command:Command)= {
+    def executeCommand(command:Command): String= {
         command match{
-            case Place(position, direction) => println(s"Placing robot in position ${position}, and direction ${direction}") 
-            case Move => println("moving")
-            case Left => println("left")
-            case Right => println("right")
-            case Report => println("report")
+            case Place(position, direction) => {
+                this.position = position;
+                this.direction = direction;
+                s"Placing robot in position ${this.position(0)},${this.position(1)} and direction ${this.direction}" 
+            } 
+            case Move => {
+                this.direction match {
+                    case North => this.position(1) +=1
+                    case East => this.position(0) +=1
+                    case South => this.position(1) -=1
+                    case West => this.position(0) -=1
+                }
+                "moving"
+            }
+            case Left =>  "Rotating Left"
+            case Right => "Rotating Right"
+            case Report => s"${this.position(0)},${this.position(1)},${directionToString(this.direction)}"
         }
     }
 
     def execute():String ={
-        
-        val commands = for {line <-commandsList
+        val commands = for {
+            line <-commandsList
             command = this.getCommandFromLine(line)
         } yield command
 
+        val results = commands.map(executeCommand)
 
-        commands.map(executeCommand) 
+        results.foreach(println)
+        results.last
 
-               "done"
     }
-
-
 }
