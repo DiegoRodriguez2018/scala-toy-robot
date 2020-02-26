@@ -13,10 +13,10 @@ case object Left extends Command
 case object Right extends Command
 case object Report extends Command
 
-class Position(val x:Int, val y:Int)
+case class Position(x:Int, y:Int)
 
 class ToyRobot (commandsList:List[String]) {
-    private var position: Position = new Position(0,0)
+    private var position: Position = Position(0,0)
     private var direction: Direction =  North
     private val tableSize = 5;
 
@@ -43,7 +43,7 @@ class ToyRobot (commandsList:List[String]) {
             case x if x == "PLACE" =>{
                 val Array(x, y, directionAsString) = line.replace("PLACE ", "").split(",")
                 val direction = this.stringToDirection(directionAsString)
-                val position = new Position(x.toInt, y.toInt)
+                val position = Position(x.toInt, y.toInt)
                 Place(position, direction)
             } 
             case "MOVE" => Move
@@ -74,10 +74,10 @@ class ToyRobot (commandsList:List[String]) {
                 val (x, y) = (position.x, position.y)
 
                 val newPosition = this.direction match {
-                    case North => new Position(x, y + 1)
-                    case East => new Position(x + 1, y)
-                    case South => new Position(x, y -1)
-                    case West => new Position(x -1 , y)
+                    case North => Position(x, y + 1)
+                    case East => Position(x + 1, y)
+                    case South => Position(x, y -1)
+                    case West => Position(x -1 , y)
                 }
 
                 if (this.isValidPosition(newPosition)) {
