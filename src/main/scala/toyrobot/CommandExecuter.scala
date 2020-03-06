@@ -16,9 +16,6 @@ case object Report extends Command
 case class Position(x:Int, y:Int)
 
 class CommandExecuter (commandsList:List[String]) {
-    private var position: Position = Position(0,0)
-    private var direction: Direction =  North
-    private val tableSize = 5;
 
     def stringToDirection(str:String):Direction = {
         str match {
@@ -26,15 +23,6 @@ class CommandExecuter (commandsList:List[String]) {
             case "EAST" => East
             case "SOUTH" => South
             case "WEST" => West
-        }
-    }
-
-    def directionToString(direction:Direction)={
-        direction match {
-            case  North =>  "NORTH"
-            case  East => "EAST"
-            case  South => "SOUTH"
-            case  West => "WEST"
         }
     }
 
@@ -53,69 +41,59 @@ class CommandExecuter (commandsList:List[String]) {
         }
     }
 
-    def isValidPosition(position:Position) = {
-        val (x, y) = (position.x, position.y)
-        x >= 0 & x <= tableSize & y >= 0 & y <= tableSize
-    }
-
-    def executeCommand(command:Command): String= {
-        command match{
-            case Place(position: Position, direction: Direction) => {
-                // Checking if position is valid, otherwise ignoring command.
-                if (this.isValidPosition(position)){
-                    this.position = position;
-                    this.direction = direction;
-                    s"Placing robot in position ${position.x},${position.y} and direction ${this.direction}" 
-                } else {
-                    s"Invalid Input. Can not PLACE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${this.position.x},${this.position.y}"
-                }
-            } 
-            case Move => {
-                val (x, y) = (position.x, position.y)
-
-                val newPosition = this.direction match {
-                    case North => Position(x, y + 1)
-                    case East => Position(x + 1, y)
-                    case South => Position(x, y -1)
-                    case West => Position(x -1 , y)
-                }
-
-                if (this.isValidPosition(newPosition)) {
-                    this.position = newPosition
-                    "Moving"
-                } else {
-                    s"Invalid Input. Can not MOVE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${this.position.x},${this.position.y}"
-                }
-            }
-            case Left =>  {
-                this.direction = this.direction match {
-                    case North => West
-                    case West => South
-                    case South => East
-                    case East => North
-                }
-                "Rotating Left"
-            }
-            case Right =>  {
-                this.direction = this.direction match {
-                    case  North =>  East
-                    case  East => South
-                    case  South => West
-                    case  West => North
-                }
-                "Rotating Right"
-            }
-            case Report => s"${this.position.x},${this.position.y},${directionToString(this.direction)}"
-        }
-    }
-
-    def execute():List[String] ={
+    def execute():List[Robot] ={
         val commands = for {
             line <-commandsList
             command = this.getCommandFromLine(line)
         } yield command
 
-        val results = commands.map(executeCommand)
-        results
+        val robots = new ToyRobot(commands)
+        robots.execute
+    }
+}
+
+
+case class Robot(position: Position, direction: Direction){
+
+    def directionToString(direction:Direction)={
+        direction match {
+            case  North =>  "NORTH"
+            case  East => "EAST"
+            case  South => "SOUTH"
+            case  West => "WEST"
+        }
+    }
+
+    def report() = {
+         s"${this.position.x},${this.position.y},${directionToString(this.direction)}"
+    }
+}
+
+
+class ToyRobot(commands: List[Command]){
+    private val tableSize = 5;
+    
+    def execute(): List[Robot]= {
+        val initialValue = new Robot(Position(0,0), North)
+        val robots = commands.scanLeft(initialValue)((previousRobot,command)=> executeCommand(previousRobot,command))
+        robots
+    } 
+
+    def getNextPosition (currentRobot: Robot, command:Command): Robot = {
+        currentRobot
+    }
+
+    def isValidPosition(position:Position) = {
+        val (x, y) = (position.x, position.y)
+        x >= 0 & x <= tableSize & y >= 0 & y <= tableSize
+    }
+
+    def executeCommand(previousRobot: Robot, command:Command): Robot = {
+        command match{
+            case Place(position: Position, direction: Direction) => {
+                new Robot(position, direction)
+            } 
+            case Report => previousRobot
+        }
     }
 }
