@@ -1,4 +1,4 @@
-import toyrobot.{CommandReader, ToyRobot}
+import toyrobot.{CommandReader, CommandExecuter}
 
 object Main {
   def main(args: Array[String]): Unit = {   
@@ -8,8 +8,8 @@ object Main {
     
     if (CommandReader.validate(commandsPath)){
       val commands = CommandReader.getCommands(commandsPath)
-      val robot = new ToyRobot(commands)
-      val results = robot.execute
+      val executer = new CommandExecuter(commands)
+      val results = executer.execute
       val finalPosition = results.last
       results.foreach(println)
       println(s"\n Robot final position is ${finalPosition}")

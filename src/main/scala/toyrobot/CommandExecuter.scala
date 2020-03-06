@@ -15,7 +15,7 @@ case object Report extends Command
 
 case class Position(x:Int, y:Int)
 
-class ToyRobot (commandsList:List[String]) {
+class CommandExecuter (commandsList:List[String]) {
     private var position: Position = Position(0,0)
     private var direction: Direction =  North
     private val tableSize = 5;
