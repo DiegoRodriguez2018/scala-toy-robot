@@ -1,22 +1,7 @@
 package toyrobot
-
-sealed trait Direction
-case object North extends Direction
-case object East extends Direction
-case object South extends Direction
-case object West extends Direction
-
-sealed trait Command
-case class Place(position:Position, direction:Direction) extends Command
-case object Move extends Command
-case object Left extends Command
-case object Right extends Command
-case object Report extends Command
-
-case class Position(x:Int, y:Int)
+import toyrobot.{ToyRobot, Direction, Position, Command}
 
 class CommandExecuter (commandsList:List[String]) {
-
     def stringToDirection(str:String):Direction = {
         str match {
             case "NORTH" => North
@@ -49,51 +34,5 @@ class CommandExecuter (commandsList:List[String]) {
 
         val robots = new ToyRobot(commands)
         robots.execute
-    }
-}
-
-
-case class Robot(position: Position, direction: Direction){
-
-    def directionToString(direction:Direction)={
-        direction match {
-            case  North =>  "NORTH"
-            case  East => "EAST"
-            case  South => "SOUTH"
-            case  West => "WEST"
-        }
-    }
-
-    def report() = {
-         s"${this.position.x},${this.position.y},${directionToString(this.direction)}"
-    }
-}
-
-
-class ToyRobot(commands: List[Command]){
-    private val tableSize = 5;
-    
-    def execute(): List[Robot]= {
-        val initialValue = new Robot(Position(0,0), North)
-        val robots = commands.scanLeft(initialValue)((previousRobot,command)=> executeCommand(previousRobot,command))
-        robots
-    } 
-
-    def getNextPosition (currentRobot: Robot, command:Command): Robot = {
-        currentRobot
-    }
-
-    def isValidPosition(position:Position) = {
-        val (x, y) = (position.x, position.y)
-        x >= 0 & x <= tableSize & y >= 0 & y <= tableSize
-    }
-
-    def executeCommand(previousRobot: Robot, command:Command): Robot = {
-        command match{
-            case Place(position: Position, direction: Direction) => {
-                new Robot(position, direction)
-            } 
-            case Report => previousRobot
-        }
     }
 }
