@@ -1,4 +1,5 @@
 package toyrobot
+import toyrobot.{ Robot }
 
 class ToyRobot(commands: List[Command]){
     private val tableSize = 5;
@@ -84,5 +85,3 @@ class ToyRobot(commands: List[Command]){
         }
     }
 }
-
-case class Robot(position: Position, direction: Direction, log: String)
