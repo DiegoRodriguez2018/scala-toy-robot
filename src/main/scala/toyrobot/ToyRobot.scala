@@ -3,8 +3,17 @@ package toyrobot
 class ToyRobot(commands: List[Command]){
     private val tableSize = 5;
     
+    def directionToString(direction:Direction)={
+        direction match {
+            case  North =>  "NORTH"
+            case  East => "EAST"
+            case  South => "SOUTH"
+            case  West => "WEST"
+        }
+    }
+
     def execute(): List[Robot]= {
-        val initialValue = new Robot(Position(0,0), North)
+        val initialValue = new Robot(Position(0,0), North, "Starting robot")
         val robots = commands.scanLeft(initialValue)((previousRobot,command)=> executeCommand(previousRobot,command))
         robots
     } 
@@ -24,10 +33,11 @@ class ToyRobot(commands: List[Command]){
             case Place(position: Position, direction: Direction) => {
                 // Checking if position is valid, otherwise ignoring command.
                 if (this.isValidPosition(position)){
-                    println(s"Placing robot in position ${position.x},${position.y} and direction ${direction}") 
-                    new Robot(position, direction)
+                    val message = s"Placing robot in position ${position.x},${position.y} and direction ${direction}"
+                    new Robot(position, direction, message)
                 } else {
-                    println(s"Invalid Input. Can not PLACE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${position.x},${position.y}")
+                    val message = s"Invalid Input. Can not PLACE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${position.x},${position.y}"
+                    
                     previousRobot
                 }
             } 
@@ -42,50 +52,37 @@ class ToyRobot(commands: List[Command]){
                 }
 
                 if (this.isValidPosition(newPosition)) {
-                    println("Moving")
-                    new Robot(newPosition, previousDirection)
+                    new Robot(newPosition, previousDirection, "Moving")
                 } else {
-                    println(s"Invalid Input. Can not MOVE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${previousPosition.x},${previousPosition.y}")
-                    previousRobot
+                    val message = s"Invalid Input. Can not MOVE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${previousPosition.x},${previousPosition.y}"
+                    val newRobot = previousRobot.copy(log = message)
+                    newRobot
                 }
             }
             case Left =>  {
-                println("Rotating Left")
                 val newDirection = previousDirection match {
                     case North => West
                     case West => South
                     case South => East
                     case East => North
                 }
-                new Robot(previousPosition, newDirection)
+                new Robot(previousPosition, newDirection, "Rotating Left")
             }
             case Right =>  {
-                println("Rotating Right")
                 val newDirection = previousDirection match {
                     case  North =>  East
                     case  East => South
                     case  South => West
                     case  West => North
                 }
-                new Robot(previousPosition, newDirection)
+                new Robot(previousPosition, newDirection, "Rotating Right")
             }
             case Report => {
-                previousRobot
+                val message = s"${previousPosition.x},${previousPosition.y},${directionToString(previousDirection)}"
+                previousRobot.copy(log = message)
             }
         }
     }
 }
 
-case class Robot(position: Position, direction: Direction){
-    def directionToString(direction:Direction)={
-        direction match {
-            case  North =>  "NORTH"
-            case  East => "EAST"
-            case  South => "SOUTH"
-            case  West => "WEST"
-        }
-    }
-    def report() = {
-         s"${this.position.x},${this.position.y},${directionToString(this.direction)}"
-    }
-}
+case class Robot(position: Position, direction: Direction, log: String)

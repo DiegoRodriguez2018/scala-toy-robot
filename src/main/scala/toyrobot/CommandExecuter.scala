@@ -26,7 +26,7 @@ class CommandExecuter (commandsList:List[String]) {
         }
     }
 
-    def execute():List[Robot] ={
+    def getResults():List[Robot] ={
         val commands = for {
             line <-commandsList
             command = this.getCommandFromLine(line)
