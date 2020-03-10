@@ -78,7 +78,7 @@ class ToyRobot(commands: List[Command]){
                 new Robot(previousPosition, newDirection, "Rotating Right")
             }
             case Report => {
-                val message = s"${previousPosition.x},${previousPosition.y},${directionToString(previousDirection)}"
+                val message = s"\n\nThe robot final position is ${previousPosition.x},${previousPosition.y},${directionToString(previousDirection)}\n\n"
                 previousRobot.copy(log = message)
             }
         }

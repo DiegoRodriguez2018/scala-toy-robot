@@ -11,8 +11,11 @@ object Main {
       val executer = new CommandExecuter(commands)
       val results = executer.getResults
 
-      results.foreach(robot => println(robot.log))
-      // println(s"\n Robot final position is ${finalPosition.report}")
+      val logs = for (
+        robot <- results
+      ) yield robot.log
+
+      logs.foreach(println)
     } else {
       println(s"Invalid Input from ${commandsPath}. \n Lines must start with one of the following commands: PLACE, MOVE, LEFT, RIGHT, REPORT")
     }
