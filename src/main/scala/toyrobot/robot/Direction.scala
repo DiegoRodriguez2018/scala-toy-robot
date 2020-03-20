@@ -7,7 +7,7 @@ case object South extends Direction
 case object West extends Direction
 
 object Direction {
-    def directionToString(direction:Direction)={
+    def toString(direction:Direction)={
         direction match {
             case  North =>  "NORTH"
             case  East => "EAST"
@@ -15,8 +15,7 @@ object Direction {
             case  West => "WEST"
         }
     }
-
-    def stringToDirection(str:String):Direction = {
+    def fromString(str:String):Direction = {
         str match {
             case "NORTH" => North
             case "EAST" => East
