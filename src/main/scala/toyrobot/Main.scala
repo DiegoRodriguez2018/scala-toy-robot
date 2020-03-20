@@ -10,8 +10,7 @@ object Main {
       println(s"Invalid Input from ${commandsPath}. \n Lines must start with one of the following commands: PLACE, MOVE, LEFT, RIGHT, REPORT")
     } else { 
       val commands = CommandReader.getCommands(commandsPath)
-      val executer = new CommandExecuter(commands)
-      val results = executer.getResults
+      val results = CommandExecuter.execute(commands)
       results.map(_.log).foreach(println)
     } 
   }

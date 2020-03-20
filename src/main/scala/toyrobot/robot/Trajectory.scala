@@ -1,7 +1,7 @@
 package toyrobot
 import toyrobot.{ Robot }
 
-class ToyRobot(commands: List[Command]){
+object Trajectory {
     private val tableSize = 5;
     
     def directionToString(direction:Direction)={
@@ -13,7 +13,7 @@ class ToyRobot(commands: List[Command]){
         }
     }
 
-    def execute(): List[Robot]= {
+    def build(commands: List[Command]): List[Robot]= {
         val initialValue = new Robot(Position(0,0), North, "Starting robot")
         val robots = commands.scanLeft(initialValue)((previousRobot,command)=> executeCommand(previousRobot,command))
         robots
