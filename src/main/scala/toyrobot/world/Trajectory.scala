@@ -1,22 +1,16 @@
 package toyrobot
-import toyrobot.{ Robot, Direction }
+import toyrobot.{ Table, Robot, Direction }
 
 object Trajectory {
-    private val tableSize = 5;
 
     def build(commands: List[Command]): List[Robot]= {
         val initialValue = new Robot(Position(0,0), North, "Starting robot")
         commands.scanLeft(initialValue)((currentRobot,command) => track(currentRobot,command))
     } 
 
-    def isValidPosition(position:Position) = {
-        val (x, y) = (position.x, position.y)
-        x >= 0 & x <= tableSize & y >= 0 & y <= tableSize
-    }
-
     def track(currentRobot: Robot, command:Command): Robot = {
         val (currentPosition, currentDirection)= currentRobot.unapply
-        command match{
+        command match {
             case Place(position: Position, direction: Direction) => 
                 this.place(position, direction, currentRobot)
             case Move => 
@@ -33,10 +27,11 @@ object Trajectory {
 
     def place(position: Position, direction: Direction, currentRobot:Robot):Robot = {
         // Checking if position is valid, otherwise ignoring command.
-        if (this.isValidPosition(position)){
+        if (Table.isValidPosition(position)){
             val message = s"Placing robot in position ${position.x},${position.y} and direction ${direction}"
             new Robot(position, direction, message)
         } else {
+            val tableSize = Table.tableSize
             val message = s"Invalid Input. Can not PLACE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${position.x},${position.y}"
             
             currentRobot
@@ -53,9 +48,10 @@ object Trajectory {
             case West => Position(x -1 , y)
         }
 
-        if (this.isValidPosition(newPosition)) {
+        if (Table.isValidPosition(newPosition)) {
             new Robot(newPosition, currentDirection, "Moving")
         } else {
+            val tableSize = Table.tableSize
             val message = s"Invalid Input. Can not MOVE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${currentPosition.x},${currentPosition.y}"
             val newRobot = currentRobot.copy(log = message)
             newRobot
@@ -64,7 +60,7 @@ object Trajectory {
 
     def report(currentPosition:Position, currentDirection:Direction, currentRobot: Robot) = {
         val direction = Direction.toString(currentDirection)
-        val message = s"\n\nThe robot final position is ${currentPosition.x},${currentPosition.y},${direction}\n\n"
+        val message = s"\n\nRobot's final position is ${currentPosition.x},${currentPosition.y},${direction}\n\n"
         currentRobot.copy(log = message)
     }
 
