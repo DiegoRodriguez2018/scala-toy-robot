@@ -4,8 +4,15 @@ import scala.io.Source
 object CommandReader {
     val validCommands = List("PLACE", "MOVE", "LEFT", "RIGHT", "REPORT")
     
+    def getLines(path:String):List[String]={
+        val source = Source.fromFile(path)
+        val lines = source.getLines().toList
+        source.close()
+        lines
+    }
+
     def validate(path:String): Boolean = {
-        val lines = Source.fromFile(path).getLines().toList
+        val lines = getLines(path)
         val areValidCommands = for {
             line <-lines
             firstWord =  line.split(" ").head
@@ -15,7 +22,7 @@ object CommandReader {
     }
 
     def getCommands(path:String): List[String] = {
-        val allCommands = Source.fromFile(path).getLines().toList
+        val allCommands = getLines(path)
         getCommandsAfterFirstPlaceCommand(allCommands)
     }
 
