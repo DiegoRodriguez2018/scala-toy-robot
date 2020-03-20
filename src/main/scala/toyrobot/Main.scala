@@ -6,18 +6,13 @@ object Main {
     println("\n Welcome to ToyRobot")
     println(s"Input file: ${commandsPath} \n")
     
-    if (CommandReader.validate(commandsPath)){
+    if (!CommandReader.validate(commandsPath)){
+      println(s"Invalid Input from ${commandsPath}. \n Lines must start with one of the following commands: PLACE, MOVE, LEFT, RIGHT, REPORT")
+    } else { 
       val commands = CommandReader.getCommands(commandsPath)
       val executer = new CommandExecuter(commands)
       val results = executer.getResults
-
-      val logs = for (
-        robot <- results
-      ) yield robot.log
-
-      logs.foreach(println)
-    } else {
-      println(s"Invalid Input from ${commandsPath}. \n Lines must start with one of the following commands: PLACE, MOVE, LEFT, RIGHT, REPORT")
-    }
+      results.map(_.log).foreach(println)
+    } 
   }
 }
