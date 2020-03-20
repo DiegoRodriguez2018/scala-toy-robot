@@ -1,27 +1,14 @@
 package toyrobot
-import toyrobot.{ Robot }
+import toyrobot.{ Robot, Direction }
 
 object Trajectory {
     private val tableSize = 5;
-    
-    def directionToString(direction:Direction)={
-        direction match {
-            case  North =>  "NORTH"
-            case  East => "EAST"
-            case  South => "SOUTH"
-            case  West => "WEST"
-        }
-    }
 
     def build(commands: List[Command]): List[Robot]= {
         val initialValue = new Robot(Position(0,0), North, "Starting robot")
         val robots = commands.scanLeft(initialValue)((previousRobot,command)=> executeCommand(previousRobot,command))
         robots
     } 
-
-    def getNextPosition (currentRobot: Robot, command:Command): Robot = {
-        currentRobot
-    }
 
     def isValidPosition(position:Position) = {
         val (x, y) = (position.x, position.y)
@@ -79,7 +66,8 @@ object Trajectory {
                 new Robot(previousPosition, newDirection, "Rotating Right")
             }
             case Report => {
-                val message = s"\n\nThe robot final position is ${previousPosition.x},${previousPosition.y},${directionToString(previousDirection)}\n\n"
+                val msgDirection = Direction.directionToString(previousDirection)
+                val message = s"\n\nThe robot final position is ${previousPosition.x},${previousPosition.y},${msgDirection}\n\n"
                 previousRobot.copy(log = message)
             }
         }

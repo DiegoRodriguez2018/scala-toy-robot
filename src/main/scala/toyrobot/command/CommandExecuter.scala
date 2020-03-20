@@ -7,24 +7,14 @@ object CommandExecuter {
             line <-commandsList
             command = this.getCommandFromLine(line)
         } yield command
-
         Trajectory.build(commands)
-    }
-
-    def stringToDirection(str:String):Direction = {
-        str match {
-            case "NORTH" => North
-            case "EAST" => East
-            case "SOUTH" => South
-            case "WEST" => West
-        }
     }
 
     def getCommandFromLine(line:String):Command = {
         line.split(" ").head match {
             case l if l == "PLACE" =>{
                 val Array(x, y, directionAsString) = line.replace("PLACE ", "").split(",")
-                val direction = this.stringToDirection(directionAsString)
+                val direction = Direction.stringToDirection(directionAsString)
                 val position = Position(x.toInt, y.toInt)
                 Place(position, direction)
             } 
