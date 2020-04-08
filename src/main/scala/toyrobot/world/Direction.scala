@@ -1,10 +1,10 @@
 package toyrobot
 
 sealed trait Direction
-case object North extends Direction
-case object East extends Direction
-case object South extends Direction
-case object West extends Direction
+object North extends Direction
+object East extends Direction
+object South extends Direction
+object West extends Direction
 
 object Direction {
     def toString(direction:Direction)={

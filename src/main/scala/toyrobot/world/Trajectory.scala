@@ -3,7 +3,7 @@ import toyrobot.{ Table, Robot, Direction }
 
 object Trajectory {
     def build(commands: List[Command]): List[Robot]= {
-        val initialValue = new Robot(Position(0,0), North, "Starting robot")
+        val initialValue = Robot(Position(0,0), North, "Starting robot")
         commands.scanLeft(initialValue)((currentRobot,command) => track(currentRobot,command))
     } 
 
@@ -15,9 +15,9 @@ object Trajectory {
             case Move => 
                 this.move(currentPosition,currentDirection, currentRobot)
             case Left => 
-                new Robot(currentPosition, getLeftDirection(currentDirection), "Rotating Left")
+                Robot(currentPosition, getLeftDirection(currentDirection), "Rotating Left")
             case Right => 
-                new Robot(currentPosition, getRightDirection(currentDirection), "Rotating Right")
+                Robot(currentPosition, getRightDirection(currentDirection), "Rotating Right")
             case Report => 
                 this.report(currentPosition,currentDirection, currentRobot)
         }
@@ -28,7 +28,7 @@ object Trajectory {
 
         if (Table.isValidPosition(position)){
             val message = s"Placing robot in position ${position.x},${position.y} and direction ${direction}"
-            new Robot(position, direction, message)
+            Robot(position, direction, message)
         } else {
             val tableSize = Table.tableSize
             val message = s"Invalid Input. Can not PLACE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${currentRobot.position.x},${currentRobot.position.y}"
@@ -47,7 +47,7 @@ object Trajectory {
         }
 
         if (Table.isValidPosition(newPosition)) {
-            new Robot(newPosition, currentDirection, "Moving")
+            Robot(newPosition, currentDirection, "Moving")
         } else {
             val tableSize = Table.tableSize
             val message = s"Invalid Input. Can not MOVE Robot outside the ${tableSize}x${tableSize} table. Position remains at ${currentPosition.x},${currentPosition.y}"
